@@ -59,22 +59,22 @@ class Flat(models.Model):
 
 class Feedback(models.Model):
     author = models.ForeignKey(User, null=True, blank=True, on_delete=models.SET_NULL,
-                               related_name='complaints_of_user', verbose_name='Автор жалобы')
-    flat_id = models.ForeignKey(Flat, null=True, blank=True, on_delete=models.SET_NULL,
-                                related_name='complaints_on_flat', verbose_name='Квартира, на которую пожаловались')
+                               related_name='feedbacks', verbose_name='Автор жалобы')
+    flat = models.ForeignKey(Flat, null=True, blank=True, on_delete=models.SET_NULL,
+                                related_name='complaints', verbose_name='Квартира, на которую пожаловались')
     message = models.TextField('Текст жалобы', blank=True)
 
     def __str__(self):
-        return f'{self.author} | {self.flat_id} | {self.message[:30]}'
+        return f'{self.author} | {self.flat} | {self.message[:30]}'
 
 
 class Owner(models.Model):
-    owner = models.CharField('ФИО владельца', max_length=200, db_index=True)
-    owners_phonenumber = models.CharField('Номер владельца', max_length=20)
-    owners_pure_phonenumber = modelfields.PhoneNumberField(
+    name = models.CharField('ФИО владельца', max_length=200, db_index=True)
+    phonenumber = models.CharField('Номер владельца', max_length=20)
+    pure_phonenumber = modelfields.PhoneNumberField(
         'Нормализованный номер владельца', max_length=20, null=True, blank=True)
     flats = models.ManyToManyField(
-        Flat, blank=True, related_name='flat_owners', verbose_name='Квартиры в собственности')
+        Flat, blank=True, related_name='owners', verbose_name='Квартиры в собственности')
 
     def __str__(self):
-        return f'{self.owner}'
+        return f'{self.name}'
