@@ -5,16 +5,13 @@ from django.db import migrations
 def fill_flats(apps, schema_editor):
     Flat = apps.get_model('property', 'Flat')
     Owner = apps.get_model('property', 'Owner')
-    
-    
-    for flat in Flat.objects.all():
+    flats_iterator = Flat.objects.iterator()
+    for flat in flats_iterator:
         owner, created = Owner.objects.get_or_create(owner = flat.flat_owner,
                                     owners_phonenumber = flat.owners_phonenumber,
                                     owners_pure_phonenumber = flat.owners_pure_phonenumber,)
         owner.flats.add(flat)
-           
-    
-            
+                   
         
 class Migration(migrations.Migration):
 
